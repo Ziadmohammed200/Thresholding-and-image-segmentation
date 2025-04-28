@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>917</width>
+    <height>578</height>
+   </rect>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">/* Main Window and Background */
+QMainWindow, QDialog {
+    background-color: #121212;
+    color: #f5f5f5;
+    font-family: &quot;Inter&quot;, &quot;Roboto&quot;, &quot;Segoe UI&quot;, sans-serif;
+    font-size: 10pt;
+}
+
+/* Plot Widgets */
+PlotWidget {
+    background-color: #1e1e1e;
+    border: 1px solid #333333;
+    border-radius: 8px;
+}
+
+/* Push Buttons */
+QPushButton {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    min-width: 90px;
+    text-transform: uppercase;
+    font-size: 9pt;
+    letter-spacing: 0.5px;
+}
+
+QPushButton:hover {
+    background-color: #3b82f6;
+    transition: background-color 0.3s;
+}
+
+QPushButton:pressed {
+    background-color: #1d4ed8;
+}
+
+QPushButton:disabled {
+    background-color: #333333;
+    color: #666666;
+}
+
+/* Combo Boxes */
+QComboBox {
+    border: 2px solid #333333;
+    border-radius: 8px;
+    padding: 8px 12px;
+    background-color: #1e1e1e;
+    color: #ffffff;
+    selection-background-color: #2563eb;
+    selection-color: white;
+    min-width: 120px;
+    font-family: &quot;Inter&quot;, &quot;Roboto&quot;, &quot;Segoe UI&quot;, sans-serif;
+    font-size: 10pt;
+    font-weight: 500;
+}
+QComboBox:hover {
+    border: 2px solid #2563eb;
+}
+
+QComboBox:on {
+    border: 2px solid #2563eb;
+    background-color: #1e1e1e;
+    color: rgb(255, 255, 255);
+}
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: right;
+    width: 24px;
+    border-left: 2px solid #3b82f6; 
+}
+QComboBox QAbstractItemView {
+    border: 2px solid #333333;
+    selection-background-color: #2563eb;
+    selection-color: white;
+    background-color: #1e1e1e;
+    outline: 0px;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+/* Spin Box */
+QSpinBox, QDoubleSpinBox {
+    border: 2px solid #333333;
+    border-radius: 8px;
+    padding: 8px 12px;
+    background-color: #1e1e1e;
+    color: #f5f5f5;
+    selection-background-color: #2563eb;
+    selection-color: white;
+    min-width: 90px;
+    font-family: &quot;Inter&quot;, &quot;Roboto&quot;, &quot;Segoe UI&quot;, sans-serif;
+    font-size: 10pt;
+    font-weight: 500;
+}
+
+QSpinBox:hover, QDoubleSpinBox:hover {
+    border: 2px solid #2563eb;
+}
+
+QSpinBox::up-button, QDoubleSpinBox::up-button {
+    subcontrol-origin: border;
+    subcontrol-position: top right;
+    width: 22px;
+    border-left: none;
+    border-top-right-radius: 6px;
+    background-color: #333333;
+    margin-right: 2px;
+    margin-top: 2px;
+}
+
+QSpinBox::down-button, QDoubleSpinBox::down-button {
+    subcontrol-origin: border;
+    subcontrol-position: bottom right;
+    width: 22px;
+    border-left: none;
+    border-bottom-right-radius: 6px;
+    background-color: #333333;
+    margin-right: 2px;
+    margin-bottom: 2px;
+}
+
+QSpinBox::up-button:hover, QSpinBox::down-button:hover,
+QDoubleSpinBox::up-button:hover, QDoubleSpinBox::down-button:hover {
+    background-color: #2563eb;
+}
+
+/* Group Boxes */
+QGroupBox {
+    border: 2px solid #333333;
+    border-radius: 8px;
+    margin-top: 16px;
+    font-weight: 600;
+    padding-top: 16px;
+    background-color: #1a1a1a;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 0 10px;
+    color: #3b82f6;
+    font-size: 11pt;
+    left: 10px;
+}
+QComboBox QAbstractItemView::item {
+    color: #e0e0e0; /* Normal item text */
+    background-color: #1e1e1e; /* Item background */
+}
+QComboBox QAbstractItemView::item:hover {
+    color: #ffffff; /* Hovered item text */
+    background-color: #2563eb; /* Hover background */
+}
+
+QComboBox QAbstractItemView::item:selected {
+    color: #ffffff; /* Selected item text */
+    background-color: #1d4ed8; /* Selected background */
+}
+
+
+
+/* Labels */
+QLabel {
+    color: #f5f5f5;
+    font-family: &quot;Inter&quot;, &quot;Roboto&quot;, &quot;Segoe UI&quot;, sans-serif;
+    font-size: 10pt;
+    font-weight: 500;
+}
+
+/* Checkboxes */
+QCheckBox {
+    spacing: 8px;
+    color: #f5f5f5;
+    font-family: &quot;Inter&quot;, &quot;Roboto&quot;, &quot;Segoe UI&quot;, sans-serif;
+    font-size: 10pt;
+    font-weight: 500;
+    padding: 4px;
+}
+
+QCheckBox:hover {
+    color: #ffffff;
+}
+
+QCheckBox::indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 2px solid #555555;
+    background-color: #1e1e1e;
+}
+
+QCheckBox::indicator:hover {
+    border: 2px solid #3b82f6;
+}
+
+QCheckBox::indicator:unchecked {
+    background-color: #1e1e1e;
+}
+
+QCheckBox::indicator:unchecked:hover {
+    background-color: #262626;
+    border: 2px solid #3b82f6;
+}
+
+QCheckBox::indicator:checked {
+    background-color: #2563eb;
+    border: 2px solid #2563eb;
+}
+
+QCheckBox::indicator:checked:hover {
+    background-color: #3b82f6;
+    border: 2px solid #3b82f6;
+}
+
+/* Separator Lines */
+Line {
+    background-color: #2563eb;
+}
+
+/* Status Bar */
+QStatusBar {
+    background-color: #121212;
+    color: #808080;
+    border-top: 1px solid #333333;
+}
+
+/* Menu Bar */
+QMenuBar {
+    background-color: #121212;
+    color: #f5f5f5;
+    border-bottom: 1px solid #333333;
+}
+
+QMenuBar::item {
+    padding: 5px 10px;
+    background: transparent;
+}
+
+QMenuBar::item:selected {
+    background: #333333;
+    border-radius: 4px;
+}
+
+QMenuBar::item:pressed {
+    background: #444444;
+}</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <layout class="QGridLayout" name="imageGridLayout">
+        <item row="0" column="0">
+         <widget class="PlotWidget" name="plot_original" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <widget class="QGroupBox" name="groupBox_thresholding_2">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>281</width>
+             <height>551</height>
+            </rect>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_thresholding_2"/>
+          </widget>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="PlotWidget" name="plot_processed" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <widget class="QGroupBox" name="groupBox_thresholding_3">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>281</width>
+             <height>551</height>
+            </rect>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_thresholding_3"/>
+          </widget>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="Line" name="line_16">
+          <property name="styleSheet">
+           <string notr="true">    background-color: #2563eb;
+</string>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="controlPanelLayout">
+        <item>
+         <widget class="QPushButton" name="pushButton_browse">
+          <property name="text">
+           <string>Browse Image</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_grayscale">
+          <property name="text">
+           <string>Convert to Grayscale</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_thresholding">
+          <property name="title">
+           <string>Thresholding Methods</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_thresholding">
+           <item>
+            <widget class="QComboBox" name="comboBox_thresholding">
+             <item>
+              <property name="text">
+               <string>Select Thresholding Method</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Optimal Thresholding</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Otsu's Method</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Spectral Thresholding</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Local Thresholding</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBox_local_thresholding">
+             <property name="text">
+              <string>Enable Local Thresholding</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_segmentation">
+          <property name="title">
+           <string>Segmentation Methods</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_segmentation">
+           <item>
+            <widget class="QComboBox" name="comboBox_segmentation">
+             <item>
+              <property name="text">
+               <string>Select Segmentation Method</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>K-Means Clustering</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Region Growing</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Agglomerative</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Mean Shift</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_clusters">
+             <item>
+              <widget class="QLabel" name="label_clusters">
+               <property name="text">
+                <string>Number of Clusters:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinBox_clusters">
+               <property name="minimum">
+                <number>2</number>
+               </property>
+               <property name="maximum">
+                <number>10</number>
+               </property>
+               <property name="value">
+                <number>3</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_apply">
+          <property name="text">
+           <string>Apply Processing</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_reset">
+          <property name="text">
+           <string>Reset</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QWidget</extends>
+   <header>pyqtgraph</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
