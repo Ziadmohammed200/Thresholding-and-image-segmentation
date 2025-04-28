@@ -10,6 +10,12 @@
     <height>578</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="styleSheet">
    <string notr="true">/* Main Window and Background */
 QMainWindow, QDialog {
@@ -381,6 +387,85 @@ QMenuBar::item:pressed {
             <widget class="QCheckBox" name="checkBox_local_thresholding">
              <property name="text">
               <string>Enable Local Thresholding</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Min Distance</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSlider" name="QSlider">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">/* Sliders */
+QSlider {
+    background: transparent;
+}
+
+QSlider::groove:horizontal {
+    border: 1px solid #333333;
+    height: 8px;
+    background: #1e1e1e;
+    border-radius: 4px;
+}
+
+QSlider::handle:horizontal {
+    background: #2563eb;
+    border: 2px solid #1d4ed8;
+    width: 18px;
+    height: 18px;
+    margin: -6px 0;
+    border-radius: 9px;
+}
+
+QSlider::handle:horizontal:hover {
+    background: #3b82f6;
+    border: 2px solid #2563eb;
+}
+
+QSlider::sub-page:horizontal {
+    background: #2563eb;
+    border-radius: 4px;
+}
+
+/* Vertical slider styles for consistency */
+QSlider::groove:vertical {
+    border: 1px solid #333333;
+    width: 8px;
+    background: #1e1e1e;
+    border-radius: 4px;
+}
+
+QSlider::handle:vertical {
+    background: #2563eb;
+    border: 2px solid #1d4ed8;
+    width: 18px;
+    height: 18px;
+    margin: 0 -6px;
+    border-radius: 9px;
+}
+
+QSlider::handle:vertical:hover {
+    background: #3b82f6;
+    border: 2px solid #2563eb;
+}
+
+QSlider::sub-page:vertical {
+    background: #2563eb;
+    border-radius: 4px;
+}</string>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Orientation::Horizontal</enum>
              </property>
             </widget>
            </item>
