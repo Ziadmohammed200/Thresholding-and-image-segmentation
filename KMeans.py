@@ -20,7 +20,7 @@ class KMeansSegmentation:
         """Compute distance from every point to every centroid."""
         distances = np.zeros((X.shape[0], self.n_clusters))
         for i in range(self.n_clusters):
-            distances[:, i] = np.linalg.norm(X - centroids[i], axis=1)
+            distances[:, i] = np.linalg.norm(X - centroids[i], axis=1)    #For centroid i, this finds the distance from every pixel to that centroid.
         return distances
 
     def compute_centroids(self, X, labels):
@@ -48,10 +48,6 @@ class KMeansSegmentation:
 
             self.centroids = new_centroids
 
-    def predict(self, X):
-        """Predict the closest cluster each sample in X belongs to."""
-        distances = self.compute_distances(X, self.centroids)
-        return np.argmin(distances, axis=1)
 
     def segment_image(self, image, grayscale=False):
         """

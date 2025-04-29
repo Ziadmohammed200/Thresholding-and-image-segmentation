@@ -86,12 +86,16 @@ class MainWindow(QMainWindow):
             self.hide_all_segmentation_controls()
 
         elif text == "K-Means Clustering":
+            self.hide_all_segmentation_controls()
             self.show_controls(['label_clusters', 'spinBox_clusters', 'Max_Iteration_K', 'spinBox_Iteration_K'])
         elif text == "Region Growing":
+            self.hide_all_segmentation_controls()
             self.show_controls(['Threshold_RG', 'spinBox_ThresholdGR', 'Seed_point_x', 'Seed_point_y','spinBox_point_x','spinBox_point_y'])
         elif text == "Mean Shift":
+            self.hide_all_segmentation_controls()
             self.show_controls(['Threshold_MS', 'doubleSpinBox_MS'])
         elif text == "Agglomerative":
+            self.hide_all_segmentation_controls()
             self.show_controls(['W_label', 'spinBox_3', 'H_label','doubleSpinBox', 'round_label', 'spinBox_4' ])
 
 
@@ -234,51 +238,76 @@ class MainWindow(QMainWindow):
 
 
     def region_growing(self, image, seed, threshold):
-        """Region growing algorithm implementation."""
+        """
+        Applies a region growing algorithm to segment an image based on a seed point and intensity threshold.
+
+        Parameters:
+        -----------
+        image : numpy.ndarray
+            Input image. Can be grayscale or BGR (color). If BGR, it will be converted to grayscale.
+        
+        seed : tuple (x, y)
+            The (x, y) coordinates of the seed point from where region growing starts.
+        
+        threshold : int
+            Maximum allowed intensity difference between the seed pixel and neighboring pixels to be included in the region.
+
+        Returns:
+        --------
+        segmented : numpy.ndarray
+            A binary image (same size as input) with the segmented region marked as 255 (white), and background as 0 (black).
+        """
+        
+        # Convert to grayscale if the image is in BGR (3-channel)
         if len(image.shape) == 3:
             image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         
+        # Get image dimensions
         height, width = image.shape
-        
-        # Initialize output segmented image (0 for background, 255 for region)
-        segmented = np.zeros_like(image, dtype=np.uint8)
-        
-        # Initialize visited array as boolean
-        visited = np.zeros_like(image, dtype=bool)
-        segmented = np.zeros((height, width), dtype=np.uint8)
-        visited = np.zeros((height, width), dtype=bool)
-        
+
+        # Initialize the output segmented image and visited map
+        segmented = np.zeros((height, width), dtype=np.uint8)  # 0: background, 255: region
+        visited = np.zeros((height, width), dtype=bool)        # Tracks which pixels have been visited
+
+        # Extract seed point coordinates and intensity value
         seed_x, seed_y = seed
         seed_value = image[seed_y, seed_x]
-        
+
+        # Stack for iterative depth-first search (DFS)
         stack = [(seed_x, seed_y)]
-        
-        # 7-connectivity neighbors: 4 cardinal + 3 diagonals (top-left, top-right, bottom-left)
-        neighbors = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1)]
-        
+
+        # Define 7-connected neighborhood (4 cardinal + 3 diagonals)
+        neighbors = [(-1, 0), (1, 0), (0, -1), (0, 1),  # up, down, left, right
+                    (-1, -1), (-1, 1), (1, -1)]       # top-left, top-right, bottom-left
+
+        # Main region growing loop
         while stack:
             x, y = stack.pop()
-            
-            # Skip if out of bounds
+
+            # Skip pixel if it is outside image bounds
             if x < 0 or x >= width or y < 0 or y >= height:
                 continue
-            
-            if visited[y, x] or x < 0 or x >= width or y < 0 or y >= height:
+
+            # Skip already visited pixels
+            if visited[y, x]:
                 continue
-            
-            # Mark as visited
-                
+
+            # Mark the current pixel as visited
             visited[y, x] = True
-            
+
+            # Check if the pixel is similar enough to the seed value
             if abs(int(image[y, x]) - int(seed_value)) <= threshold:
+                # Include pixel in the segmented region
                 segmented[y, x] = 255
-                
+
+                # Add unvisited neighbors to the stack for further exploration
                 for dx, dy in neighbors:
                     new_x, new_y = x + dx, y + dy
                     if 0 <= new_x < width and 0 <= new_y < height and not visited[new_y, new_x]:
                         stack.append((new_x, new_y))
-        
+
         return segmented
+
     
 #######################################################################################
 
@@ -325,6 +354,8 @@ class MainWindow(QMainWindow):
 
         self.uploded_image = None
         self.min_distance = 20
+        self.image_copy = None
+
 
         self.ui.comboBox_segmentation.setCurrentIndex(0)
 
