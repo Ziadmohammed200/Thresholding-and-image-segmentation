@@ -20,7 +20,7 @@ class MainWindow(QMainWindow):
         self.thresholding_obj = thresholding()
         self.min_distance = 20
         self.image_copy = None
-        self.seed_point = None
+
 
         # Load the UI file
         ui_file = QFile("Task_4.ui")
@@ -38,6 +38,29 @@ class MainWindow(QMainWindow):
         self.ui.checkBox_local_thresholding.stateChanged.connect(self.apply_local_thresholding)
         self.ui.pushButton_apply.clicked.connect(self.apply_segmentation)
         self.ui.comboBox_segmentation.currentTextChanged.connect(self.toggle_clusters_visibility)
+        self.ui.pushButton_reset.clicked.connect(self.clear)
+
+        self.ui.spinBox_Iteration_K.setValue(100)  # Set default (initial) value
+        self.ui.spinBox_Iteration_K.setMaximum(500)  # Set maximum limit
+        
+        self.ui.spinBox_point_x.setValue(162)  # Set default (initial) value
+        self.ui.spinBox_point_x.setMaximum(5000)  # Set maximum limit
+
+        self.ui.spinBox_point_y.setValue(72)  # Set default (initial) value
+        self.ui.spinBox_point_y.setMaximum(500)  # Set maximum limit
+
+        self.ui.spinBox_clusters.setValue(3)  # Set default (initial) value
+        self.ui.spinBox_clusters.setMaximum(100)  # Set maximum limit
+
+        self.ui.spinBox_ThresholdGR.setValue(100)  # Set default (initial) value
+        self.ui.spinBox_ThresholdGR.setMaximum(500)  # Set maximum limit
+
+
+        self.seed_point_x = self.ui.spinBox_point_x.value()
+        self.seed_point_y=self.ui.spinBox_point_y.value()
+
+
+        self.seed_point=(self.seed_point_x,self.seed_point_y)
 
         # Initialize UI controls visibility
         self.hide_all_segmentation_controls()
@@ -57,15 +80,15 @@ class MainWindow(QMainWindow):
 
     def toggle_clusters_visibility(self, text):
         """Show only relevant controls based on selected segmentation method."""
-        self.hide_all_segmentation_controls()
+        
 
-        if text == "K-Means Clustering":
+        if text == "Select Segmentation Method":
+            self.hide_all_segmentation_controls()
+
+        elif text == "K-Means Clustering":
             self.show_controls(['label_clusters', 'spinBox_clusters', 'Max_Iteration_K', 'spinBox_Iteration_K'])
         elif text == "Region Growing":
             self.show_controls(['Threshold_RG', 'spinBox_ThresholdGR', 'Seed_point_x', 'Seed_point_y','spinBox_point_x','spinBox_point_y'])
-            self.display_image(self.uploded_image, self.ui.original_image_lbl)
-            cv2.imshow("Select Seed Point", self.uploded_image)
-            cv2.setMouseCallback("Select Seed Point", self.select_seed)
         elif text == "Mean Shift":
             self.show_controls(['Threshold_MS', 'doubleSpinBox_MS'])
         elif text == "Agglomerative":
@@ -78,6 +101,9 @@ class MainWindow(QMainWindow):
             if hasattr(self.ui, name):
                 getattr(self.ui, name).show()
 
+
+
+    ################################################################################################################
     def load_image(self):
         """Load an image from file."""
         self.clear()
@@ -145,14 +171,8 @@ class MainWindow(QMainWindow):
         else:  # Unchecked
             self.display_image(self.uploded_image, self.ui.modified_image_lbl)
 
-    def select_seed(self, event, x, y, flags, param):
-        """Handle mouse click to select seed point for region growing."""
-        if event == cv2.EVENT_LBUTTONDOWN:
-            self.seed_point = (x, y)
-            print(f"Seed point selected at: {self.seed_point}")
-            cv2.circle(self.uploded_image, self.seed_point, 5, (0, 0, 255), -1)
-            self.display_image(self.uploded_image, self.ui.original_image_lbl)
-            cv2.destroyWindow("Select Seed Point")
+    ################################################################################################################
+    # Region Growing and K-Means logic
 
     def apply_segmentation(self):
         """Apply the selected segmentation method."""
@@ -161,7 +181,6 @@ class MainWindow(QMainWindow):
             return
 
         selected_method = self.ui.comboBox_segmentation.currentText()
-
         if selected_method == "K-Means Clustering":
             self.apply_kmeans()
         elif selected_method == "Region Growing":
@@ -174,8 +193,9 @@ class MainWindow(QMainWindow):
     def apply_kmeans(self):
         """Apply K-Means clustering segmentation."""
         try:
+            iterations = self.ui.spinBox_Iteration_K.value()
             num_clusters = self.ui.spinBox_clusters.value()
-            kmean = KMeansSegmentation(n_clusters=num_clusters, max_iter=100)
+            kmean = KMeansSegmentation(n_clusters=num_clusters, max_iter=iterations)
             original, outputimage = kmean.segment_image(self.uploded_image)
             self.display_image(outputimage, self.ui.modified_image_lbl)
         except Exception as e:
@@ -183,13 +203,35 @@ class MainWindow(QMainWindow):
 
     def apply_region_growing(self):
         """Apply region growing segmentation."""
+
+
+        self.seed_point_x = self.ui.spinBox_point_x.value()
+        self.seed_point_y=self.ui.spinBox_point_y.value()
+        self.seed_point=(self.seed_point_x,self.seed_point_y)
+
         if self.seed_point is None:
             print("No seed point selected. Please select a seed point on the image.")
             return
+        
+        # Draw a circle on a copy of the original image
+        image_with_circle = self.uploded_image.copy()
+        x, y = self.seed_point
+        cv2.circle(image_with_circle, (x, y), radius=5, color=(0, 0, 255), thickness=-1)  # red filled circle
 
-        threshold = self.ui.spinBox_ThresholdGR.value() if hasattr(self.ui, 'spinBox_ThresholdGR') else 10
+        # Display modified original image with circle
+        self.display_image(image_with_circle, self.ui.original_image_lbl)
+
+        threshold = self.ui.spinBox_ThresholdGR.value() if hasattr(self.ui, 'spinBox_ThresholdGR') else 100
+
+        # Apply region growing
         segmented_image = self.region_growing(self.uploded_image, self.seed_point, threshold)
+
+
+
+        # Display the segmented result
         self.display_image(segmented_image, self.ui.modified_image_lbl)
+
+
 
     def region_growing(self, image, seed, threshold):
         """Region growing algorithm implementation."""
@@ -197,6 +239,12 @@ class MainWindow(QMainWindow):
             image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         
         height, width = image.shape
+        
+        # Initialize output segmented image (0 for background, 255 for region)
+        segmented = np.zeros_like(image, dtype=np.uint8)
+        
+        # Initialize visited array as boolean
+        visited = np.zeros_like(image, dtype=bool)
         segmented = np.zeros((height, width), dtype=np.uint8)
         visited = np.zeros((height, width), dtype=bool)
         
@@ -204,13 +252,21 @@ class MainWindow(QMainWindow):
         seed_value = image[seed_y, seed_x]
         
         stack = [(seed_x, seed_y)]
+        
+        # 7-connectivity neighbors: 4 cardinal + 3 diagonals (top-left, top-right, bottom-left)
         neighbors = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1)]
         
         while stack:
             x, y = stack.pop()
             
+            # Skip if out of bounds
+            if x < 0 or x >= width or y < 0 or y >= height:
+                continue
+            
             if visited[y, x] or x < 0 or x >= width or y < 0 or y >= height:
                 continue
+            
+            # Mark as visited
                 
             visited[y, x] = True
             
@@ -223,6 +279,8 @@ class MainWindow(QMainWindow):
                         stack.append((new_x, new_y))
         
         return segmented
+    
+#######################################################################################
 
     def apply_mean_shift(self):
         """Apply mean shift segmentation."""
@@ -250,6 +308,27 @@ class MainWindow(QMainWindow):
         self.ui.original_image_lbl.clear()
         self.ui.modified_image_lbl.clear()
         self.seed_point = None
+        self.ui.spinBox_Iteration_K.setValue(100)  # Set default (initial) value
+        self.ui.spinBox_Iteration_K.setMaximum(500)  # Set maximum limit
+        
+        self.ui.spinBox_point_x.setValue(162)  # Set default (initial) value
+        self.ui.spinBox_point_x.setMaximum(5000)  # Set maximum limit
+
+        self.ui.spinBox_point_y.setValue(72)  # Set default (initial) value
+        self.ui.spinBox_point_y.setMaximum(500)  # Set maximum limit
+
+        self.ui.spinBox_clusters.setValue(3)  # Set default (initial) value
+        self.ui.spinBox_clusters.setMaximum(100)  # Set maximum limit
+
+        self.ui.spinBox_ThresholdGR.setValue(100)  # Set default (initial) value
+        self.ui.spinBox_ThresholdGR.setMaximum(500)  # Set maximum limit
+
+        self.uploded_image = None
+        self.min_distance = 20
+
+        self.ui.comboBox_segmentation.setCurrentIndex(0)
+
+        self.toggle_clusters_visibility("Select Segmentation Method")
 
 
 if __name__ == "__main__":
