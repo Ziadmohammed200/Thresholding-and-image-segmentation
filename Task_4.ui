@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>917</width>
-    <height>772</height>
+    <height>820</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -619,26 +619,39 @@ QSlider::sub-page:vertical {
             <layout class="QHBoxLayout" name="horizontalLayout_clusters">
              <item>
               <layout class="QGridLayout" name="gridLayout">
-               <item row="7" column="1">
-                <widget class="QSpinBox" name="spinBox_3"/>
-               </item>
-               <item row="11" column="1">
-                <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
-               </item>
-               <item row="4" column="1">
-                <widget class="QSpinBox" name="spinBox_ThresholdGR"/>
-               </item>
-               <item row="8" column="0">
-                <widget class="QLabel" name="label_2">
-                 <property name="text">
-                  <string>H</string>
-                 </property>
-                </widget>
+               <item row="1" column="1">
+                <widget class="QSpinBox" name="spinBox_Iteration_K"/>
                </item>
                <item row="5" column="0">
                 <widget class="QLabel" name="Seed_point_x">
                  <property name="text">
                   <string>Seed_point_x</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="12" column="1">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_MS"/>
+               </item>
+               <item row="9" column="1">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+               </item>
+               <item row="9" column="0">
+                <widget class="QLabel" name="H_label">
+                 <property name="text">
+                  <string>H</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QSpinBox" name="spinBox_point_y"/>
+               </item>
+               <item row="8" column="1">
+                <widget class="QSpinBox" name="spinBox_3"/>
+               </item>
+               <item row="12" column="0">
+                <widget class="QLabel" name="Threshold_MS">
+                 <property name="text">
+                  <string>Threshold</string>
                  </property>
                 </widget>
                </item>
@@ -649,12 +662,8 @@ QSlider::sub-page:vertical {
                  </property>
                 </widget>
                </item>
-               <item row="11" column="0">
-                <widget class="QLabel" name="label_6">
-                 <property name="text">
-                  <string>Threshold</string>
-                 </property>
-                </widget>
+               <item row="5" column="1">
+                <widget class="QSpinBox" name="spinBox_point_x"/>
                </item>
                <item row="2" column="1">
                 <widget class="QSpinBox" name="spinBox_clusters">
@@ -676,16 +685,10 @@ QSlider::sub-page:vertical {
                  </property>
                 </widget>
                </item>
-               <item row="8" column="1">
-                <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
-               </item>
-               <item row="10" column="1">
-                <widget class="QSpinBox" name="spinBox_4"/>
-               </item>
-               <item row="10" column="0">
-                <widget class="QLabel" name="label_5">
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_clusters">
                  <property name="text">
-                  <string>round decimal</string>
+                  <string>Clusters:</string>
                  </property>
                 </widget>
                </item>
@@ -696,22 +699,25 @@ QSlider::sub-page:vertical {
                  </property>
                 </widget>
                </item>
-               <item row="1" column="1">
-                <widget class="QSpinBox" name="spinBox_Iteration_K"/>
-               </item>
-               <item row="7" column="0">
-                <widget class="QLabel" name="label_3">
+               <item row="8" column="0">
+                <widget class="QLabel" name="W_label">
                  <property name="text">
                   <string>W</string>
                  </property>
                 </widget>
                </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_clusters">
+               <item row="4" column="1">
+                <widget class="QSpinBox" name="spinBox_ThresholdGR"/>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="round_label">
                  <property name="text">
-                  <string>Clusters:</string>
+                  <string>round decimal</string>
                  </property>
                 </widget>
+               </item>
+               <item row="7" column="1">
+                <widget class="QSpinBox" name="spinBox_4"/>
                </item>
               </layout>
              </item>
