@@ -73,7 +73,8 @@ def segment_color(I, w, h_r, epsilon=1e-5, max_iter=100, round_decimals=1):
 
 # Example usage
 def run_mean_shift_segmentation(img_path, w, h_r, round_decimals=1):
-    epsilon=1e-5, max_iter=100
+    epsilon = 1e-5
+    max_iter = 100
     original = cv2.imread(img_path)
     img = Image.open(img_path)
     if img.mode == 'L':  # Grayscale
