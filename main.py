@@ -29,7 +29,8 @@ class MainWindow(QMainWindow):
         self.ui = loader.load(ui_file)
         ui_file.close()
         self.setCentralWidget(self.ui)
-
+        self.resize(1400, 900)
+        
         # Connect UI elements to their respective methods
         self.ui.pushButton_browse.clicked.connect(self.load_image)
         self.ui.comboBox_thresholding.currentIndexChanged.connect(self.apply_thresholding)
