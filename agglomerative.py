@@ -1,4 +1,5 @@
 import numpy as np
+import cv2
 
 class UnionFind:
     def __init__(self, size):
@@ -66,21 +67,9 @@ def segment_image(image, T):
     return labels.reshape(H, W)
 
 
-def visualize_segments(image, labels):
-    num_segments = np.max(labels) + 1
-    color_map = np.random.randint(0, 255, size=(num_segments, 3), dtype=np.uint8)
+def run_agglomerative(img_path, T):
+    original = cv2.imread(img_path)
+    labels = segment_image(original, T)
+    return original, labels
 
-    segmented_image = np.zeros_like(image)
-    for i in range(num_segments):
-        mask = labels == i
-        segmented_image[mask] = color_map[i]
-
-    cv2.imshow('Segmented Image', segmented_image)
-    cv2.waitKey(0)
-
-import cv2
-image = cv2.imread('test_segmentation.png')
-T = 10.0  
-labels = segment_image(image, T)
-visualize_segments(image, labels)
 

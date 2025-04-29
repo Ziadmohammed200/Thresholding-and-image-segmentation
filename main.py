@@ -7,8 +7,8 @@ from PySide6.QtCore import QFile, Qt
 from PySide6.QtWidgets import QFileDialog
 from PySide6.QtGui import QPixmap
 from Thresholding import thresholding
-import time
-
+from mean_shift import run_mean_shift_segmentation
+from agglomerative import run_agglomerative
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -110,6 +110,22 @@ class MainWindow(QMainWindow):
             self.display_image(self.uploded_image,self.ui.modified_image_lbl)
 
         print("enter")
+    
+    def visualize_segments(image, labels, type):
+        num_segments = np.max(labels) + 1
+        color_map = np.random.randint(0, 255, size=(num_segments, 3), dtype=np.uint8)
+        segmented_image = np.zeros_like(image)
+        for i in range(num_segments):
+            mask = labels == i
+            if type == 1: # mean_shift
+                segmented_image[mask, :] = color_map[i]  # Fixed: Added [:] to specify all channels
+            else:
+                segmented_image[mask] = color_map[i]
+
+        # cv2.imshow('Segmented Image', segmented_image)
+        # cv2.waitKey(0)
+        pass
+
 
     def clear(self):
         self.ui.original_image_lbl.clear()

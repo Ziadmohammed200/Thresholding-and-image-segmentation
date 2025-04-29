@@ -70,45 +70,18 @@ def segment_color(I, w, h_r, epsilon=1e-5, max_iter=100, round_decimals=1):
     labels = label(index_img)
     return labels, len(unique_colors)
 
-# Fixed visualization function
-def visualize_segments(image, labels):
-    num_segments = np.max(labels) + 1
-    color_map = np.random.randint(0, 255, size=(num_segments, 3), dtype=np.uint8)
-    segmented_image = np.zeros_like(image)
-    for i in range(num_segments):
-        mask = labels == i
-        segmented_image[mask, :] = color_map[i]  # Fixed: Added [:] to specify all channels
-    cv2.imshow('Segmented Image', segmented_image)
-    cv2.waitKey(0)
 
 # Example usage
-def run_mean_shift_segmentation(w, h_r, epsilon=1e-5, max_iter=100, round_decimals=1):
-    w = 30   # Adjusted spatial window radius
-    h_r = 0.5  # Adjusted range bandwidth
-    original = cv2.imread('test_segmentation.png')
-    img = Image.open('test_segmentation.png')
-
+def run_mean_shift_segmentation(img_path, w, h_r, round_decimals=1):
+    epsilon=1e-5, max_iter=100
+    original = cv2.imread(img_path)
+    img = Image.open(img_path)
     if img.mode == 'L':  # Grayscale
         I = np.array(img, dtype=float) / 255.0
-        is_color = False
+        labels, num_segments = segment_grey(I, w, h_r, epsilon, max_iter, round_decimals)
     else:  # RGB
         I = np.array(img.convert('RGB'), dtype=float) / 255.0
-        is_color = True
-    
-    if is_color:
-        print("Processing color image...")
         labels, num_segments = segment_color(I, w, h_r, epsilon, max_iter, round_decimals)
-        F = mean_shift_filter_color(I, w, h_r, epsilon , max_iter)  # Get filtered image
-        F_display = (F * 255).astype(np.uint8)
-        cv2.imshow('Filtered Image', F_display)
-        cv2.waitKey(0)
-    else:
-        print("Processing grayscale image...")
-        labels, num_segments = segment_grey(I, w, h_r, epsilon, max_iter, round_decimals)
-        F = mean_shift_filter_grey(I, w, h_r, epsilon, max_iter)
-        F_display = (F * 255).astype(np.uint8)
-        cv2.imshow('Filtered Image', F_display)
-        cv2.waitKey(0)
 
     print(f"Number of segments: {num_segments}")
-    visualize_segments(original, labels)
+    return original, labels
