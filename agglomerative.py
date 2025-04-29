@@ -67,9 +67,20 @@ def segment_image(image, T):
     return labels.reshape(H, W)
 
 
-def run_agglomerative(img_path, T):
-    original = cv2.imread(img_path)
+def run_agglomerative(original, T):
     labels = segment_image(original, T)
-    return original, labels
+    segmented = visualize_segments_agg(original, labels)
+    return segmented
+
+
+def visualize_segments_agg(image, labels):
+        num_segments = np.max(labels) + 1
+        color_map = np.random.randint(0, 255, size=(num_segments, 3), dtype=np.uint8)
+        segmented_image = np.zeros_like(image)
+        for i in range(num_segments):
+            mask = labels == i
+            segmented_image[mask] = color_map[i]
+            
+        return segmented_image
 
 

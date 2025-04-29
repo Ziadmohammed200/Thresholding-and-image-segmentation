@@ -113,6 +113,7 @@ class MainWindow(QMainWindow):
         self.clear()
         file_path, _ = QFileDialog.getOpenFileName(self, "Open Image", "", "Images (*.png *.jpg *.jpeg *.bmp *.gif)")
         if file_path:
+            self.path = file_path
             self.uploded_image = cv2.imread(file_path)
             self.display_image(self.uploded_image, self.ui.original_image_lbl)
 
@@ -314,12 +315,10 @@ class MainWindow(QMainWindow):
     def apply_mean_shift(self):
         """Apply mean shift segmentation."""
         try:
-            # Get parameters from UI controls
-            bandwidth = self.ui.doubleSpinBox.value() if hasattr(self.ui, 'doubleSpinBox') else 0.1
-            max_iter = self.ui.spinBox_3.value() if hasattr(self.ui, 'spinBox_3') else 100
-            
-            # Run mean shift segmentation
-            segmented_image = run_mean_shift_segmentation(self.uploded_image, bandwidth, max_iter)
+            W = self.ui.spinBox_3.value() if hasattr(self.ui, 'spinBox_3') else 30
+            H = self.ui.doubleSpinBox.value() if hasattr(self.ui,'doubleSpinBox') else 0.3
+            round = self.ui.spinBox_4.value() if hasattr(self.ui, 'spinBox_4') else 1
+            segmented_image = run_mean_shift_segmentation(self.path, self.uploded_image, W, H, round)
             self.display_image(segmented_image, self.ui.modified_image_lbl)
         except Exception as e:
             print(f"Error during Mean Shift segmentation: {e}")
@@ -327,7 +326,8 @@ class MainWindow(QMainWindow):
     def apply_agglomerative(self):
         """Apply agglomerative clustering segmentation."""
         try:
-            segmented_image = run_agglomerative(self.uploded_image)
+            thresh = self.ui.doubleSpinBox_MS.value() if hasattr(self.ui, 'doubleSpinBox_MS') else 50
+            segmented_image = run_agglomerative(self.uploded_image, thresh)
             self.display_image(segmented_image, self.ui.modified_image_lbl)
         except Exception as e:
             print(f"Error during Agglomerative segmentation: {e}")

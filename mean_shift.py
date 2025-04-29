@@ -72,10 +72,9 @@ def segment_color(I, w, h_r, epsilon=1e-5, max_iter=100, round_decimals=1):
 
 
 # Example usage
-def run_mean_shift_segmentation(img_path, w, h_r, round_decimals=1):
+def run_mean_shift_segmentation(img_path,original , w, h_r, round_decimals=1):
     epsilon = 1e-5
     max_iter = 100
-    original = cv2.imread(img_path)
     img = Image.open(img_path)
     if img.mode == 'L':  # Grayscale
         I = np.array(img, dtype=float) / 255.0
@@ -85,4 +84,15 @@ def run_mean_shift_segmentation(img_path, w, h_r, round_decimals=1):
         labels, num_segments = segment_color(I, w, h_r, epsilon, max_iter, round_decimals)
 
     print(f"Number of segments: {num_segments}")
-    return original, labels
+    segmented = visualize_segments_shift(original, labels)
+    return segmented
+
+def visualize_segments_shift(image, labels):
+        num_segments = np.max(labels) + 1
+        color_map = np.random.randint(0, 255, size=(num_segments, 3), dtype=np.uint8)
+        segmented_image = np.zeros_like(image)
+        for i in range(num_segments):
+            mask = labels == i
+            segmented_image[mask, :] = color_map[i]  # Fixed: Added [:] to specify all channels
+            
+        return segmented_image
