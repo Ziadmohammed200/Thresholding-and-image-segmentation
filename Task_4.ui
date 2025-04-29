@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1214</width>
-    <height>501</height>
+    <width>917</width>
+    <height>772</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -263,6 +263,61 @@ QMenuBar::item:selected {
 
 QMenuBar::item:pressed {
     background: #444444;
+}
+QLabel#original_image_lbl,
+QLabel#modified_image_lbl {
+    font-family: &quot;Inter&quot;, &quot;Roboto&quot;, sans-serif;
+    font-size: 11pt;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 4px;
+    margin: 8px;
+    qproperty-alignment: AlignCenter;
+    min-width: 160px;
+    letter-spacing: 0.3px;
+    border: 1px solid transparent;
+    background-color: rgba(30, 30, 30, 0.85);
+}
+
+/* Original Image Label Specific Style */
+QLabel#original_image_lbl {
+    color: #93c5fd;
+    border-color: rgba(59, 130, 246, 0.4);
+    background-color: rgba(29, 78, 216, 0.2);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+/* Modified Image Label Specific Style */
+QLabel#modified_image_lbl {
+    color: #93c5fd;
+    border-color: rgba(59, 130, 246, 0.4);
+    background-color: rgba(29, 78, 216, 0.2);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+/* Hover Effects */
+QLabel#original_image_lbl:hover {
+    background-color: rgba(37, 99, 235, 0.25);
+    border-color: rgba(59, 130, 246, 0.6);}
+
+QLabel#modified_image_lbl:hover {
+    background-color: rgba(37, 99, 235, 0.25);
+    border-color: rgba(59, 130, 246, 0.6);
+}
+
+/* Active/Pressed State */
+QLabel#original_image_lbl:pressed {
+    background-color: rgba(29, 78, 216, 0.3);
+}
+
+QLabel#modified_image_lbl:pressed {
+    background-color: rgba(29, 78, 216, 0.3);
+}
+
+/* Animation for Smooth Transitions */
+QLabel#original_image_lbl,
+QLabel#modified_image_lbl {
+    transition: background-color 0.2s ease, border-color 0.2s ease;
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -284,9 +339,25 @@ QMenuBar::item:pressed {
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>281</width>
-             <height>551</height>
+             <width>762</width>
+             <height>870</height>
             </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">#groupBox_thresholding_2 {
+     border: 1px solid gray;
+    border-radius: 3px;
+    margin-top: 0.5em;
+    padding-top:80px;
+    padding-bottom: 80px;
+    padding-left: 80px;
+    padding-right: 80px;
+    min-width: 600px; 
+    min-height: 700px;
+    max-width: 600px; 
+    max-height: 700px;
+}
+</string>
            </property>
            <property name="title">
             <string/>
@@ -295,7 +366,7 @@ QMenuBar::item:pressed {
             <item>
              <widget class="QLabel" name="original_image_lbl">
               <property name="text">
-               <string>TextLabel</string>
+               <string>load_image</string>
               </property>
              </widget>
             </item>
@@ -316,9 +387,31 @@ QMenuBar::item:pressed {
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>281</width>
-             <height>551</height>
+             <width>762</width>
+             <height>870</height>
             </rect>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">#groupBox_thresholding_3 {
+     border: 1px solid gray;
+    border-radius: 3px;
+    margin-top: 0.5em;
+    padding-top:80px;
+    padding-bottom: 80px;
+    padding-left: 80px;
+    padding-right: 80px;
+    min-width: 600px; 
+    min-height: 700px;
+    max-width: 600px; 
+    max-height: 700px;
+}
+</string>
            </property>
            <property name="title">
             <string/>
@@ -327,7 +420,7 @@ QMenuBar::item:pressed {
             <item>
              <widget class="QLabel" name="modified_image_lbl">
               <property name="text">
-               <string>TextLabel</string>
+               <string>load_image</string>
               </property>
              </widget>
             </item>
@@ -358,13 +451,6 @@ QMenuBar::item:pressed {
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_grayscale">
-          <property name="text">
-           <string>Convert to Grayscale</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QGroupBox" name="groupBox_thresholding">
           <property name="title">
            <string>Thresholding Methods</string>
@@ -390,6 +476,11 @@ QMenuBar::item:pressed {
              <item>
               <property name="text">
                <string>Spectral Thresholding</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Local Thresholding</string>
               </property>
              </item>
             </widget>
@@ -475,9 +566,6 @@ QSlider::sub-page:vertical {
     border-radius: 4px;
 }</string>
              </property>
-             <property name="minimum">
-              <number>10</number>
-             </property>
              <property name="orientation">
               <enum>Qt::Orientation::Horizontal</enum>
              </property>
@@ -488,6 +576,12 @@ QSlider::sub-page:vertical {
         </item>
         <item>
          <widget class="QGroupBox" name="groupBox_segmentation">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="title">
            <string>Segmentation Methods</string>
           </property>
@@ -524,24 +618,102 @@ QSlider::sub-page:vertical {
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_clusters">
              <item>
-              <widget class="QLabel" name="label_clusters">
-               <property name="text">
-                <string>Number of Clusters:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSpinBox" name="spinBox_clusters">
-               <property name="minimum">
-                <number>2</number>
-               </property>
-               <property name="maximum">
-                <number>10</number>
-               </property>
-               <property name="value">
-                <number>3</number>
-               </property>
-              </widget>
+              <layout class="QGridLayout" name="gridLayout">
+               <item row="7" column="1">
+                <widget class="QSpinBox" name="spinBox_3"/>
+               </item>
+               <item row="11" column="1">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
+               </item>
+               <item row="4" column="1">
+                <widget class="QSpinBox" name="spinBox_ThresholdGR"/>
+               </item>
+               <item row="8" column="0">
+                <widget class="QLabel" name="label_2">
+                 <property name="text">
+                  <string>H</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="Seed_point_x">
+                 <property name="text">
+                  <string>Seed_point_x</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="Seed_point_y">
+                 <property name="text">
+                  <string>Seed_point_y</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="0">
+                <widget class="QLabel" name="label_6">
+                 <property name="text">
+                  <string>Threshold</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QSpinBox" name="spinBox_clusters">
+                 <property name="minimum">
+                  <number>2</number>
+                 </property>
+                 <property name="maximum">
+                  <number>10</number>
+                 </property>
+                 <property name="value">
+                  <number>3</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="Max_Iteration_K">
+                 <property name="text">
+                  <string>Max_Iteration</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="1">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+               </item>
+               <item row="10" column="1">
+                <widget class="QSpinBox" name="spinBox_4"/>
+               </item>
+               <item row="10" column="0">
+                <widget class="QLabel" name="label_5">
+                 <property name="text">
+                  <string>round decimal</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="Threshold_RG">
+                 <property name="text">
+                  <string>Threshold</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QSpinBox" name="spinBox_Iteration_K"/>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="label_3">
+                 <property name="text">
+                  <string>W</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_clusters">
+                 <property name="text">
+                  <string>Clusters:</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
             </layout>
            </item>
