@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>917</width>
-    <height>578</height>
+    <width>1214</width>
+    <height>501</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -291,7 +291,15 @@ QMenuBar::item:pressed {
            <property name="title">
             <string/>
            </property>
-           <layout class="QVBoxLayout" name="verticalLayout_thresholding_2"/>
+           <layout class="QVBoxLayout" name="verticalLayout_thresholding_2">
+            <item>
+             <widget class="QLabel" name="original_image_lbl">
+              <property name="text">
+               <string>TextLabel</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </widget>
         </item>
@@ -315,7 +323,15 @@ QMenuBar::item:pressed {
            <property name="title">
             <string/>
            </property>
-           <layout class="QVBoxLayout" name="verticalLayout_thresholding_3"/>
+           <layout class="QVBoxLayout" name="verticalLayout_thresholding_3">
+            <item>
+             <widget class="QLabel" name="modified_image_lbl">
+              <property name="text">
+               <string>TextLabel</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </widget>
         </item>
@@ -374,11 +390,6 @@ QMenuBar::item:pressed {
              <item>
               <property name="text">
                <string>Spectral Thresholding</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Local Thresholding</string>
               </property>
              </item>
             </widget>
@@ -463,6 +474,9 @@ QSlider::sub-page:vertical {
     background: #2563eb;
     border-radius: 4px;
 }</string>
+             </property>
+             <property name="minimum">
+              <number>10</number>
              </property>
              <property name="orientation">
               <enum>Qt::Orientation::Horizontal</enum>
