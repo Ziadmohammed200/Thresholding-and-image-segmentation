@@ -1,0 +1,114 @@
+import numpy as np
+from skimage.measure import label
+from PIL import Image
+import cv2
+
+# Mean shift filtering for grayscale images
+def mean_shift_filter_grey(I, w, h_r, epsilon=1e-5, max_iter=100):
+    H, W = I.shape
+    F = np.zeros_like(I, dtype=float)
+    for i in range(H):
+        for j in range(W):
+            I_current = I[i, j]
+            for _ in range(max_iter):
+                k_min = max(0, i - w)
+                k_max = min(H, i + w + 1)
+                l_min = max(0, j - w)
+                l_max = min(W, j + w + 1)
+                window = I[k_min:k_max, l_min:l_max]
+                mask = np.abs(window - I_current) < h_r
+                if np.sum(mask) == 0:
+                    break
+                I_mean = np.mean(window[mask])
+                if np.abs(I_mean - I_current) < epsilon:
+                    break
+                I_current = I_mean
+            F[i, j] = I_current
+    return F
+
+# Segmentation for grayscale images
+def segment_grey(I, w, h_r, epsilon=1e-5, max_iter=100, round_decimals=1):
+    F = mean_shift_filter_grey(I, w, h_r, epsilon, max_iter)
+    F_rounded = np.round(F, decimals=round_decimals)
+    unique_values, inverse_indices = np.unique(F_rounded, return_inverse=True)
+    index_img = inverse_indices.reshape(I.shape)
+    labels = label(index_img)
+    return labels, len(unique_values)
+
+# Mean shift filtering for color images (RGB)
+def mean_shift_filter_color(I, w, h_r, epsilon=1e-5, max_iter=100):
+    H, W, _ = I.shape
+    F = np.zeros_like(I, dtype=float)
+    for i in range(H):
+        for j in range(W):
+            C_current = I[i, j].copy()
+            for _ in range(max_iter):
+                k_min = max(0, i - w)
+                k_max = min(H, i + w + 1)
+                l_min = max(0, j - w)
+                l_max = min(W, j + w + 1)
+                window = I[k_min:k_max, l_min:l_max]
+                distances = np.sqrt(np.sum((window - C_current) ** 2, axis=2))
+                mask = distances < h_r
+                if np.sum(mask) == 0:
+                    break
+                C_mean = np.mean(window[mask], axis=0)
+                if np.sqrt(np.sum((C_mean - C_current) ** 2)) < epsilon:
+                    break
+                C_current = C_mean
+            F[i, j] = C_current
+    return F
+
+# Segmentation for color images (RGB)
+def segment_color(I, w, h_r, epsilon=1e-5, max_iter=100, round_decimals=1):
+    F = mean_shift_filter_color(I, w, h_r, epsilon, max_iter)
+    F_rounded = np.round(F, decimals=round_decimals)
+    H, W, _ = F.shape
+    F_flat = F_rounded.reshape(-1, 3)
+    unique_colors, inverse_indices = np.unique(F_flat, axis=0, return_inverse=True)
+    index_img = inverse_indices.reshape(H, W)
+    labels = label(index_img)
+    return labels, len(unique_colors)
+
+# Fixed visualization function
+def visualize_segments(image, labels):
+    num_segments = np.max(labels) + 1
+    color_map = np.random.randint(0, 255, size=(num_segments, 3), dtype=np.uint8)
+    segmented_image = np.zeros_like(image)
+    for i in range(num_segments):
+        mask = labels == i
+        segmented_image[mask, :] = color_map[i]  # Fixed: Added [:] to specify all channels
+    cv2.imshow('Segmented Image', segmented_image)
+    cv2.waitKey(0)
+
+# Example usage
+def run_mean_shift_segmentation(w, h_r, epsilon=1e-5, max_iter=100, round_decimals=1):
+    w = 30   # Adjusted spatial window radius
+    h_r = 0.5  # Adjusted range bandwidth
+    original = cv2.imread('test_segmentation.png')
+    img = Image.open('test_segmentation.png')
+
+    if img.mode == 'L':  # Grayscale
+        I = np.array(img, dtype=float) / 255.0
+        is_color = False
+    else:  # RGB
+        I = np.array(img.convert('RGB'), dtype=float) / 255.0
+        is_color = True
+    
+    if is_color:
+        print("Processing color image...")
+        labels, num_segments = segment_color(I, w, h_r, epsilon, max_iter, round_decimals)
+        F = mean_shift_filter_color(I, w, h_r, epsilon , max_iter)  # Get filtered image
+        F_display = (F * 255).astype(np.uint8)
+        cv2.imshow('Filtered Image', F_display)
+        cv2.waitKey(0)
+    else:
+        print("Processing grayscale image...")
+        labels, num_segments = segment_grey(I, w, h_r, epsilon, max_iter, round_decimals)
+        F = mean_shift_filter_grey(I, w, h_r, epsilon, max_iter)
+        F_display = (F * 255).astype(np.uint8)
+        cv2.imshow('Filtered Image', F_display)
+        cv2.waitKey(0)
+
+    print(f"Number of segments: {num_segments}")
+    visualize_segments(original, labels)
