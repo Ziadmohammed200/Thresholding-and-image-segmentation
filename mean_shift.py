@@ -3,7 +3,6 @@ from skimage.measure import label
 from PIL import Image
 import cv2
 
-# Mean shift filtering for grayscale images
 def mean_shift_filter_grey(I, w, h_r, epsilon=1e-5, max_iter=100):
     H, W = I.shape
     F = np.zeros_like(I, dtype=float)
@@ -26,7 +25,6 @@ def mean_shift_filter_grey(I, w, h_r, epsilon=1e-5, max_iter=100):
             F[i, j] = I_current
     return F
 
-# Segmentation for grayscale images
 def segment_grey(I, w, h_r, epsilon=1e-5, max_iter=100, round_decimals=1):
     F = mean_shift_filter_grey(I, w, h_r, epsilon, max_iter)
     F_rounded = np.round(F, decimals=round_decimals)
@@ -35,7 +33,6 @@ def segment_grey(I, w, h_r, epsilon=1e-5, max_iter=100, round_decimals=1):
     labels = label(index_img)
     return labels, len(unique_values)
 
-# Mean shift filtering for color images (RGB)
 def mean_shift_filter_color(I, w, h_r, epsilon=1e-5, max_iter=100):
     H, W, _ = I.shape
     F = np.zeros_like(I, dtype=float)
@@ -59,7 +56,6 @@ def mean_shift_filter_color(I, w, h_r, epsilon=1e-5, max_iter=100):
             F[i, j] = C_current
     return F
 
-# Segmentation for color images (RGB)
 def segment_color(I, w, h_r, epsilon=1e-5, max_iter=100, round_decimals=1):
     F = mean_shift_filter_color(I, w, h_r, epsilon, max_iter)
     F_rounded = np.round(F, decimals=round_decimals)
@@ -71,7 +67,6 @@ def segment_color(I, w, h_r, epsilon=1e-5, max_iter=100, round_decimals=1):
     return labels, len(unique_colors)
 
 
-# Example usage
 def run_mean_shift_segmentation(img_path,original , w, h_r, round_decimals=1):
     epsilon = 1e-5
     max_iter = 100
